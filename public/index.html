@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Atlassian API Test</title>
+  <style>
+    html {
+      width: 100%;
+      height: 100%;
+    }
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-flow: column nowrap;
+      justify-content: center;
+      align-items: center;
+      background-color: #181818;
+    }
+
+    .action-container {
+      display: inline-flex;
+      flex-flow: row nowrap;
+      justify-content: center;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    button.action-button {
+      border: 0;
+      background: none;
+      box-shadow: 2px 2px 7px rgba(0, 0, 0, 0.7);
+      border-radius: 0;
+      padding: 0.7rem 1rem 0.7rem 1rem;
+      color: #303030;
+      background-color: #9ae657;
+      transition: 0.2s ease-out 0s background-color, 0.2s ease-out 0s color;
+    }
+    button.action-button:hover {
+      color: #ffffff;
+      background-color: #5d7c42;
+    }
+  </style>
+</head>
+<body>
+  <div class="action-container">
+    <button class="action-button" id="clear-auth-info-button">Clear Auth Info</button>
+  </div>
+  <script type="module">
+    async function checkAuth() {
+      try {
+        const response = await fetch('/api/auth');
+        const data = await response.json();
+        
+        if (data.authUrl) {
+          window.location.assign(data.authUrl);
+        } else {
+          // We're authenticated, fetch spaces
+          fetchSpaces();
+        }
+      } catch (error) {
+        console.error('Auth check failed:', error);
+      }
+    }
+
+    async function fetchSpaces() {
+      try {
+        const response = await fetch('/api/spaces?keys=OP');
+        const data = await response.json();
+        console.log('Spaces:', data);
+      } catch (error) {
+        console.error('Failed to fetch spaces:', error);
+      }
+    }
+
+    document.getElementById('clear-auth-info-button').addEventListener('click', () => {
+      document.cookie = 'atlassian_token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+      window.location.reload();
+    });
+
+    // Check authentication status on page load
+    checkAuth();
+  </script>
+</body>
+</html> 
