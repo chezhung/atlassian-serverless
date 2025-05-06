@@ -65,7 +65,7 @@ exports.handler = async function(event, context) {
       statusCode: 302,
       headers: {
         'Location': '/',
-        'Set-Cookie': `atlassian_token=${access_token}; Path=/; HttpOnly; Secure; SameSite=Strict`
+        'Set-Cookie': `atlassian_token=${access_token}; Path=/; HttpOnly; Secure; SameSite=Lax`
       }
     };
   } catch (error) {
