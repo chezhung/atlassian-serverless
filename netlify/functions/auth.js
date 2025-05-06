@@ -66,7 +66,9 @@ exports.handler = async function(event, context) {
     return {
       statusCode: 302,
       headers: {
-        'Location': '/',
+        'Location': '/'
+      },
+      multiValueHeaders: {
         'Set-Cookie': [
           `atlassian_token=${access_token}; Path=/; HttpOnly; Secure; SameSite=Strict`,
           `confluence_url=${confluence_url}; Path=/; HttpOnly; Secure; SameSite=Strict`
