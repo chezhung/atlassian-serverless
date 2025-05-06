@@ -1,25 +1,18 @@
-/**
-* Try to get the value of the spcified cookie.
-* @param {string} name The name of the cookie value to get.
-* @returns The cookie value or undefined if the specified cookie is not found.
-*/
-function getCookie(name) {
-  const cookies = `; ${document.cookie}`;
-  const matches = cookies.match(new RegExp(`;[ \\t\\n\\r]*${name}=([^;$]*)`));
-  if (matches !== undefined && matches !== null && matches.length > 0) {
-      return matches[1];
-  } else {
-      return undefined;
-  } // End if
-} // End of getCookie
 
 exports.handler = async function(event, context) {
   if (event.httpMethod !== 'GET') {
     return { statusCode: 405, body: 'Method Not Allowed' };
   }
 
-  const token  = getCookie('atlassian_token');
-  const apiUrl = getCookie('confluence_url');
+  // Parse cookies from the request headers
+  const cookies = event.headers.cookie?.split(';').reduce((acc, cookie) => {
+    const [key, value] = cookie.trim().split('=');
+    acc[key] = value;
+    return acc;
+  }, {}) || {};
+
+  const token = cookies['atlassian_token'];
+  const apiUrl = cookies['confluence_url'];
 
   if (!token) {
     return {
