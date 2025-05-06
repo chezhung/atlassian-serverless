@@ -28,7 +28,7 @@ exports.handler = async function(event, context) {
     });
 
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      throw new Error(`HTTP error! status: ${response.status}, URL: ${url}, token: ${token}`);
     }
 
     const data = await response.json();
