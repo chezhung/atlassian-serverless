@@ -60,18 +60,16 @@ exports.handler = async function(event, context) {
     const data = await response.json();
     const { access_token } = data;
 
+    // Instead of returning JSON, redirect to index.html
     return {
-      statusCode: 200,
+      statusCode: 302,
       headers: {
-        'Set-Cookie': `atlassian_token=${access_token}; Path=/; HttpOnly; Secure; SameSite=Strict`,
-      },
-      body: JSON.stringify({ success: true })
+        'Location': '/',
+        'Set-Cookie': `atlassian_token=${access_token}; Path=/; HttpOnly; Secure; SameSite=Strict`
+      }
     };
   } catch (error) {
     console.error('Auth error:', error);
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ error: 'Authentication failed' })
-    };
+    return createResponse(500, { error: 'Authentication failed' });
   }
 }; 
