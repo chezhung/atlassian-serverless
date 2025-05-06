@@ -67,8 +67,10 @@ exports.handler = async function(event, context) {
       statusCode: 302,
       headers: {
         'Location': '/',
-        'Set-Cookie': `atlassian_token=${access_token}; Path=/; Secure; SameSite=Lax`,
-        'Set-Cookie': `confluence_url=${confluence_url}; Path=/; Secure; SameSite=Lax`
+        'Set-Cookie': [
+          `atlassian_token=${access_token}; Path=/; HttpOnly; Secure; SameSite=Strict`,
+          `confluence_url=${confluence_url}; Path=/; HttpOnly; Secure; SameSite=Strict`
+        ]
       }
     };
   } catch (error) {
