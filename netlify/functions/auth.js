@@ -84,7 +84,8 @@ exports.handler = async function(event, context) {
         'Set-Cookie': [
           `atlassian_token=${data.access_token}; Path=/; Secure; SameSite=Lax;`,
           `cloud_id=${encodeURIComponent(resData.id)}; Path=/; Secure; SameSite=Lax;`,
-          `host_url=${encodeURIComponent(resData.url)}; Path=/; Secure; SameSite=Lax;`
+          `host_url=${encodeURIComponent(resData.url)}; Path=/; Secure; SameSite=Lax;`,
+          `accessible_resources=${JSON.stringify(resData)}; Path=/; Secure; SameSite=Lax;`
         ]
       }
     };
