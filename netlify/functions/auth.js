@@ -72,7 +72,7 @@ exports.handler = async function(event, context) {
       throw new Error(`Failed to get accessible resources: ${resourcesResponse.status}`);
     }
 
-    const resData = await resourcesResponse.json();
+    const resData = (await resourcesResponse.json())[0];
     console.log('Accessible resources data:', JSON.stringify(resData, null, 2));
 
     return {
@@ -83,9 +83,8 @@ exports.handler = async function(event, context) {
       multiValueHeaders: {
         'Set-Cookie': [
           `atlassian_token=${data.access_token}; Path=/; Secure; SameSite=Lax;`,
-          `cloud_id=${encodeURIComponent(resData.id)}; Path=/; Secure; SameSite=Lax;`,
-          `host_url=${encodeURIComponent(resData.url)}; Path=/; Secure; SameSite=Lax;`,
-          `accessible_resources=${JSON.stringify(resData)}; Path=/; Secure; SameSite=Lax;`
+          `cloud_id=${resData.id}; Path=/; Secure; SameSite=Lax;`,
+          `host_url=${resData.url}; Path=/; Secure; SameSite=Lax;`
         ]
       }
     };

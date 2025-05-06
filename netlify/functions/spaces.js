@@ -12,8 +12,8 @@ exports.handler = async function(event, context) {
   }, {}) || {};
 
   const token   = cookies['atlassian_token'];
-  const cloudId = decodeURIComponent(cookies['cloud_id']);
-  const hostUrl = decodeURIComponent(cookies['host_url']);
+  const cloudId = cookies['cloud_id'];
+  const hostUrl = cookies['host_url'];
 
   //const confluenceApiUrl = `${hostUrl}/rest/api/v2`;
   const confluenceApiUrl = `https://api.atlassian.com/ex/confluence/${cloudId}/rest/api/v2`;
