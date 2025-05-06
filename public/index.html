@@ -55,10 +55,9 @@
         const data = await response.json();
         
         if (data.authUrl) {
-          console.log(data);
-          //window.location.assign(data.authUrl);
+          window.location.assign(data.authUrl);
         } else {
-          // We're authenticated, fetch spaces
+          // We're authenticated, fetch spaces.
           fetchSpaces();
         }
       } catch (error) {
@@ -68,6 +67,7 @@
 
     async function fetchSpaces() {
       try {
+        console.log('Fetching spaces...');
         const response = await fetch('/api/spaces?keys=OP');
         const data = await response.json();
         console.log('Spaces:', data);
