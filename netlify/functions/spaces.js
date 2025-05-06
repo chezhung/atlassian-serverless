@@ -11,9 +11,12 @@ exports.handler = async function(event, context) {
     return acc;
   }, {}) || {};
 
-  const token = cookies['atlassian_token'];
-  const apiUrl = cookies['confluence_url'];
+  const token   = cookies['atlassian_token'];
+  const cloudId = cookies['cloud_id'];
+  const hostUrl = cookies['host_url'];
 
+  //const confluenceApiUrl = `${hostUrl}/rest/api/v2`;
+  const confluenceApiUrl = `https://api.atlassian.com/ex/confluence/${cloudId}/rest/api/v2`;
   if (!token) {
     return {
       statusCode: 401,
@@ -23,7 +26,7 @@ exports.handler = async function(event, context) {
 
   try {
     // Use the correct API endpoint for Confluence spaces
-    const url = new URL(apiUrl + 'spaces');
+    const url = new URL(`${confluenceApiUrl}/spaces`);
     
     // Add query parameters if they exist
     if (event.queryStringParameters) {

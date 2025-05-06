@@ -57,10 +57,10 @@ exports.handler = async function(event, context) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    const data = await response.json();
-
-    const access_token = data.access_token;
-    const confluence_url = `https://api.atlassian.com/ex/confluence/${data.id}/rest/api/v2/`;
+    const data           = await response.json();
+    const access_token   = data.access_token;
+    const cloud_id       = data.id;
+    const host_url       = data.url;
 
     // Instead of returning JSON, redirect to index.html
     return {
@@ -71,7 +71,8 @@ exports.handler = async function(event, context) {
       multiValueHeaders: {
         'Set-Cookie': [
           `atlassian_token=${access_token}; Path=/; Secure; SameSite=Lax;`,
-          `confluence_url=${confluence_url}; Path=/; Secure; SameSite=Lax;`
+          `cloud_id=${cloud_id}; Path=/; Secure; SameSite=Lax;`,
+          `host_url=${host_url}; Path=/; Secure; SameSite=Lax;`
         ]
       }
     };
