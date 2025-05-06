@@ -1,11 +1,25 @@
+/**
+* Try to get the value of the spcified cookie.
+* @param {string} name The name of the cookie value to get.
+* @returns The cookie value or undefined if the specified cookie is not found.
+*/
+function getCookie(name) {
+  const cookies = `; ${document.cookie}`;
+  const matches = cookies.match(new RegExp(`;[ \\t\\n\\r]*${name}=([^;$]*)`));
+  if (matches !== undefined && matches !== null && matches.length > 0) {
+      return matches[1];
+  } else {
+      return undefined;
+  } // End if
+} // End of getCookie
+
 exports.handler = async function(event, context) {
   if (event.httpMethod !== 'GET') {
     return { statusCode: 405, body: 'Method Not Allowed' };
   }
 
-  const token = event.headers.cookie?.split(';')
-    .find(c => c.trim().startsWith('atlassian_token='))
-    ?.split('=')[1];
+  const token  = getCookie('atlassian_token');
+  const apiUrl = getCookie('confluence_url');
 
   if (!token) {
     return {
@@ -16,7 +30,7 @@ exports.handler = async function(event, context) {
 
   try {
     // Use the correct API endpoint for Confluence spaces
-    const url = new URL('https://api.atlassian.com/ex/confluence/OP/wiki/api/v2/spaces');
+    const url = new URL(apiUrl + 'spaces');
     
     // Add query parameters if they exist
     if (event.queryStringParameters) {

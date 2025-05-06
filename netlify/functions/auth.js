@@ -58,14 +58,16 @@ exports.handler = async function(event, context) {
     }
 
     const data = await response.json();
-    const { access_token } = data;
+
+    const access_token = data.access_token;
+    const confluence_url = `https://api.atlassian.com/ex/confluence/${data.id}/rest/api/v2/`;
 
     // Instead of returning JSON, redirect to index.html
     return {
       statusCode: 302,
       headers: {
         'Location': '/',
-        'Set-Cookie': `atlassian_token=${access_token}; Path=/; Secure; SameSite=Lax`
+        'Set-Cookie': `atlassian_token=${access_token}; confluence_url=${confluence_url}; Path=/; Secure; SameSite=Lax`
       }
     };
   } catch (error) {
