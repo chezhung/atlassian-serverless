@@ -57,10 +57,27 @@ exports.handler = async function(event, context) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    const data           = await response.json();
-    const access_token   = data.access_token;
-    const cloud_id       = data.id;
-    const host_url       = data.url;
+    const data = await response.json();
+    console.log('Token response:', JSON.stringify(data, null, 2));
+
+    // Get user info to get the cloud ID
+    const userResponse = await fetch('https://api.atlassian.com/me', {
+      headers: {
+        'Authorization': `Bearer ${data.access_token}`,
+        'Accept': 'application/json'
+      }
+    });
+
+    if (!userResponse.ok) {
+      throw new Error(`Failed to get user info: ${userResponse.status}`);
+    }
+
+    const userData = await userResponse.json();
+    console.log('User data:', JSON.stringify(userData, null, 2));
+
+    const access_token = data.access_token;
+    const cloud_id = userData.id;
+    const host_url = userData.url;
 
     // Instead of returning JSON, redirect to index.html
     return {
