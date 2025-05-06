@@ -15,10 +15,17 @@ exports.handler = async function(event, context) {
   }
 
   try {
-    const url = new URL('https://kkvideo.atlassian.net/wiki/api/v2/spaces');
-    Object.entries(event.queryStringParameters || {}).forEach(([key, value]) => {
-      url.searchParams.append(key, value);
-    });
+    // Use the correct API endpoint for Confluence spaces
+    const url = new URL('https://api.atlassian.com/ex/confluence/OP/wiki/api/v2/spaces');
+    
+    // Add query parameters if they exist
+    if (event.queryStringParameters) {
+      Object.entries(event.queryStringParameters).forEach(([key, value]) => {
+        url.searchParams.append(key, value);
+      });
+    }
+
+    console.log('Making request to:', url.toString());
 
     const response = await fetch(url, {
       headers: {
@@ -28,7 +35,14 @@ exports.handler = async function(event, context) {
     });
 
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}, URL: ${url}, token: ${token}`);
+      const errorText = await response.text();
+      console.error('API Error:', {
+        status: response.status,
+        statusText: response.statusText,
+        url: url.toString(),
+        response: errorText
+      });
+      throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
     }
 
     const data = await response.json();
@@ -47,7 +61,10 @@ exports.handler = async function(event, context) {
     console.error('Spaces error:', error);
     return {
       statusCode: error.status || 500,
-      body: JSON.stringify({ error: error.message })
+      body: JSON.stringify({ 
+        error: error.message,
+        details: error.stack
+      })
     };
   }
 }; 
