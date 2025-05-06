@@ -88,7 +88,7 @@ exports.handler = async function(event, context) {
       multiValueHeaders: {
         'Set-Cookie': [
           `atlassian_token=${access_token}; Path=/; Secure; SameSite=Lax;`,
-          `cloud_id=${JSON.stringify(resData)}; Path=/; Secure; SameSite=Lax;`,
+          `cloud_id=${cloud_id}; Path=/; Secure; SameSite=Lax;`,
           `host_url=${host_url}; Path=/; Secure; SameSite=Lax;`
         ]
       }
