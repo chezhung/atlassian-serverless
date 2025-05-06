@@ -1,5 +1,5 @@
 // Constants
-const DEFAULT_SCOPES = 'read:content:confluence write:content:confluence read:content-details:confluence read:space-details:confluence read:page:confluence write:page:confluence read:template:confluence read:space:confluence';
+const DEFAULT_SCOPES = 'write:confluence-content read:confluence-space.summary read:confluence-content.all read:confluence-user read:confluence-content.summary search:confluence read:confluence-groups';
 
 // Helper functions
 function createAuthUrl() {
