@@ -55,7 +55,8 @@
         const data = await response.json();
         
         if (data.authUrl) {
-          window.location.assign(data.authUrl);
+          console.log(data);
+          //window.location.assign(data.authUrl);
         } else {
           // We're authenticated, fetch spaces
           fetchSpaces();

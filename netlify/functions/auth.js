@@ -1,17 +1,40 @@
+// Constants
+const AUTH_BASE_URL = 'https://auth.atlassian.com';
+const DEFAULT_SCOPES = 'read:confluence-content read:confluence-space.summary';
+
+// Helper functions
+function createAuthUrl() {
+  let urlParams = new URLSearchParams({
+    audience: 'api.atlassian.com',
+    client_id: process.env.ATLASSIAN_CLIENT_ID,
+    scope: DEFAULT_SCOPES,
+    redirect_uri: process.env.ATLASSIAN_REDIRECT_URI,
+    response_type: 'code',
+    prompt: 'consent'
+  }).toString();
+  return `${AUTH_BASE_URL}/authorize?${urlParams}`;
+} // End of createAuthUrl
+
+function createResponse(statusCode, body, headers = {}) {
+  return {
+    statusCode,
+    headers: {
+      'Content-Type': 'application/json',
+      ...headers
+    },
+    body: JSON.stringify(body)
+  };
+} // End of createResponse
+
 exports.handler = async function(event, context) {
   if (event.httpMethod !== 'GET') {
-    return { statusCode: 405, body: 'Method Not Allowed' };
+    return createResponse(405, { error: 'Method Not Allowed' });
   }
 
   const { code } = event.queryStringParameters;
   
   if (!code) {
-    // Return auth URL if no code is provided
-    const authUrl = `https://auth.atlassian.com/authorize?audience=api.atlassian.com&client_id=${process.env.ATLASSIAN_CLIENT_ID}&scope=read%3Aconfluence-content%20read%3Aconfluence-space.summary&redirect_uri=${process.env.ATLASSIAN_REDIRECT_URI}&response_type=code&prompt=consent`;
-    return {
-      statusCode: 200,
-      body: JSON.stringify({ authUrl })
-    };
+    return createResponse(200, { authUrl: createAuthUrl() });
   }
 
   try {
