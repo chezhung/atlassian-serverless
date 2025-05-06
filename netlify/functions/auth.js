@@ -1,6 +1,5 @@
 // Constants
-const AUTH_BASE_URL = 'https://auth.atlassian.com';
-const DEFAULT_SCOPES = 'read:confluence-content read:confluence-space.summary';
+const DEFAULT_SCOPES = 'read:content:confluence write:content:confluence read:content-details:confluence read:space-details:confluence read:page:confluence write:page:confluence read:template:confluence read:space:confluence';
 
 // Helper functions
 function createAuthUrl() {
@@ -12,7 +11,7 @@ function createAuthUrl() {
     response_type: 'code',
     prompt: 'consent'
   }).toString();
-  return `${AUTH_BASE_URL}/authorize?${urlParams}`;
+  return `https://auth.atlassian.com/authorize?${urlParams}`;
 } // End of createAuthUrl
 
 function createResponse(statusCode, body, headers = {}) {
