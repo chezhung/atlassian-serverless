@@ -52,7 +52,7 @@ exports.handler = async function(event, context) {
         url: url.toString(),
         response: errorText
       });
-      throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+      throw new Error(`HTTP error! status: ${response.status}, URL: ${url.toString()}, message: ${errorText}`);
     }
 
     const data = await response.json();
