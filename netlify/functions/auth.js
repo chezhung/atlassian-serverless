@@ -75,11 +75,6 @@ exports.handler = async function(event, context) {
     const resData = await resourcesResponse.json();
     console.log('Accessible resources data:', JSON.stringify(resData, null, 2));
 
-    const access_token = data.access_token;
-    const cloud_id = resData.id;
-    const host_url = resData.url;
-
-    // Instead of returning JSON, redirect to index.html
     return {
       statusCode: 302,
       headers: {
@@ -87,9 +82,9 @@ exports.handler = async function(event, context) {
       },
       multiValueHeaders: {
         'Set-Cookie': [
-          `atlassian_token=${access_token}; Path=/; Secure; SameSite=Lax;`,
-          `cloud_id=${cloud_id}; Path=/; Secure; SameSite=Lax;`,
-          `host_url=${host_url}; Path=/; Secure; SameSite=Lax;`
+          `atlassian_token=${data.access_token}; Path=/; Secure; SameSite=Lax;`,
+          `cloud_id=${encodeURIComponent(resData.id)}; Path=/; Secure; SameSite=Lax;`,
+          `host_url=${encodeURIComponent(resData.url)}; Path=/; Secure; SameSite=Lax;`
         ]
       }
     };
